@@ -468,18 +468,19 @@ header {
 </div>
 
 <script>
-// Our friend group data
+// Our friend group data - NOW WITH PALAK!
 const FRIENDS = [
-  { name: "Ritika", birthday: "06-07-08", bio: "Im only 17" },
-  { name: "Vidhi", birthday: "12-11-08", bio: "Mainu Ishq tera lae dooba" },
-  { name: "Saksham", birthday: "24-01-09", bio: "Dolly chai wala lover" },
-  { name: "Harshit", birthday: "23-01-07", bio: "sigma boi" },
-  { name: "Sai", birthday: "04-03-08", bio: "jeetard" },
-  { name: "Juili", birthday: "25-05-08", bio: "ayeeee" },
-  { name: "Kunal", birthday: "19-10-08", bio: "cotton picker" },
-  { name: "Ayaan", birthday: "16-01-08", bio: "Gawar" },
-  { name: "Amrut", birthday: "20-09-05", bio: "Lamba Khamba" },
-  { name: "Shifa", birthday: "10-06-08", bio: "The best" }
+  { name: "Ritika", birthday: "06-07-08", bio: "Loves chai & creative sketches ✨" },
+  { name: "Vidhi", birthday: "12-11-08", bio: "Bookworm with the best vibes 📚" },
+  { name: "Saksham", birthday: "24-01-09", bio: "Tech enthusiast & gaming pro 🎮" },
+  { name: "Harshit", birthday: "23-01-07", bio: "Cricket lover and coding wizard 🏏" },
+  { name: "Sai", birthday: "04-03-08", bio: "Photography king with a shy smile 📷" },
+  { name: "Juili", birthday: "25-05-08", bio: "Painter of beautiful tiny worlds 🎨" },
+  { name: "Kunal", birthday: "19-10-08", bio: "Master of sketches and snacks ✏️" },
+  { name: "Ayaan", birthday: "16-01-08", bio: "Math genius with endless puns 🔢" },
+  { name: "Amrut", birthday: "20-09-05", bio: "The wise old soul of the group 👑" },
+  { name: "Shifa", birthday: "10-06-08", bio: "Poet, baddie, memory keeper 💫" },
+  { name: "Palak", birthday: "06-11-08", bio: "Creative spirit with a golden heart 🌟" }
 ];
 
 // App state
@@ -501,7 +502,7 @@ const noPostsNotice = document.getElementById('noPostsNotice');
 const actionButtons = document.getElementById('actionButtons');
 const authArea = document.getElementById('authArea');
 
-// Storage helpers
+// Storage helpers - FIXED: Now properly saves profiles
 function getPostsKey(username) { return `ml_posts_${username.toLowerCase()}`; }
 function getAvatarKey(username) { return `ml_avatar_${username.toLowerCase()}`; }
 function getProfileKey(username) { return `ml_profile_${username.toLowerCase()}`; }
@@ -521,6 +522,20 @@ function loadAvatar(username) {
 
 function saveAvatar(username, dataURL) {
   localStorage.setItem(getAvatarKey(username), dataURL);
+}
+
+// NEW: Profile loading and saving functions
+function loadProfile(username) {
+  try { 
+    const profile = localStorage.getItem(getProfileKey(username));
+    return profile ? JSON.parse(profile) : null;
+  } catch { 
+    return null; 
+  }
+}
+
+function saveProfile(username, profileData) {
+  localStorage.setItem(getProfileKey(username), JSON.stringify(profileData));
 }
 
 // Login function
@@ -620,21 +635,25 @@ function renderUpcomingBirthdays() {
   });
 }
 
-// Render profile
+// Render profile - FIXED: Now uses saved profiles
 function renderProfile(username) {
   const friend = FRIENDS.find(f => f.name === username);
   if (!friend) return;
 
+  // Load saved profile data or use default
+  const savedProfile = loadProfile(username);
+  const displayBio = savedProfile?.bio || friend.bio;
+  const displayAvatar = loadAvatar(username);
+
   // Update profile header
   profileName.textContent = friend.name;
-  profileBio.textContent = friend.bio;
+  profileBio.textContent = displayBio;
   profileBday.textContent = formatBirthday(friend.birthday);
 
   // Update avatar
-  const savedAvatar = loadAvatar(friend.name);
-  profileAvatar.style.backgroundImage = savedAvatar ? `url(${savedAvatar})` : '';
-  profileAvatar.style.backgroundSize = savedAvatar ? 'cover' : '';
-  profileAvatar.textContent = savedAvatar ? '' : friend.name[0];
+  profileAvatar.style.backgroundImage = displayAvatar ? `url(${displayAvatar})` : '';
+  profileAvatar.style.backgroundSize = displayAvatar ? 'cover' : '';
+  profileAvatar.textContent = displayAvatar ? '' : friend.name[0];
 
   // Show/hide action buttons
   const isOwnProfile = friend.name === currentUser.name;
@@ -718,13 +737,22 @@ function deletePost(postId) {
   renderPosts(currentUser.name);
 }
 
-// Edit profile
+// Edit profile - FIXED: Now properly saves changes
 document.getElementById('editProfileBtn').onclick = function() {
-  const newBio = prompt('Update your bio:', profileBio.textContent);
-  if (newBio !== null) {
+  const currentBio = profileBio.textContent;
+  const newBio = prompt('Update your bio:', currentBio);
+  
+  if (newBio !== null && newBio !== currentBio) {
+    // Save the new bio to profile storage
+    saveProfile(currentUser.name, { bio: newBio });
+    // Update the display immediately
     profileBio.textContent = newBio;
+    
+    // Also update the friends list display
+    renderFriendsList();
   }
   
+  // Avatar upload
   const avatarInput = document.createElement('input');
   avatarInput.type = 'file';
   avatarInput.accept = 'image/*';
