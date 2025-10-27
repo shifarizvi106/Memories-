@@ -1,1 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Lane</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
+        :root {
+            --primary: #8A2BE2;
+            --secondary: #4B0082;
+            --accent: #FF6B6B;
+            --light: #F8F9FA;
+            --dark: #212529;
+            --gray: #6C757D;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+        }
+
+        /* Login Page Styles */
+        .login-page {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 50px;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        h1, h2 {
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: var(--gray);
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--dark);
+            font-weight: 500;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.1);
+        }
+
+        button {
+            padding: 15px 25px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .btn-secondary {
+            background: var(--light);
+            color: var(--dark);
+            border: 1px solid #dee2e6;
+        }
+
+        .error {
+            color: #e74c3c;
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #ffeaea;
+            border-radius: 8px;
+            display: none;
+        }
+
+        /* App Page Styles */
+        .app-page {
+            display: none;
+        }
+
+        header {
+            background: white;
+            padding: 15px 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .app-layout {
+            display: grid;
+            grid-template-columns: 1fr 3fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .app-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            height: fit-content;
+        }
+
+        .friends-list {
+            margin-top: 20px;
+        }
+
+        .friend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .friend-item:hover {
+            background: #f8f9fa;
+        }
+
+        .friend-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: var(--secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        /* Upload Section */
+        .upload-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        .upload-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .image-preview {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 10px;
+            display: none;
+            margin-top: 10px;
+        }
+
+        .char-counter {
+            text-align: right;
+            font-size: 14px;
+            color: var(--gray);
+            margin-top: 5px;
+        }
+
+        /* Feed */
+        .feed {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .memory-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .memory-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+
+        .memory-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .memory-content {
+            padding: 20px;
+        }
+
+        .memory-caption {
+            margin-bottom: 15px;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .memory-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        .memory-author {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--gray);
+            grid-column: 1 / -1;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+    <div class="login-page" id="loginPage">
+        <div class="login-container">
+            <div class="logo">🕒</div>
+            <h1>Memory Lane</h1>
+            <p class="subtitle">A private scrapbook for you and your friends</p>
+            
+            <form id="loginForm">
+                <div class="input-group">
+                    <label for="username">Your Name</label>
+                    <input type="text" id="username" placeholder="Enter your name" required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="password">Your Birthday</label>
+                    <input type="text" id="password" placeholder="DD-MM-YY (e.g., 10-06-08)" required>
+                    <small style="color: var(--gray); margin-top: 5px; display: block;">Format: DD-MM-YY (e.g., 10-06-08 for June 10, 2008)</small>
+                </div>
+                
+                <button type="submit" style="width: 100%;">Enter Memory Lane</button>
+                <p id="errorMessage" class="error"></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div class="app-page" id="appPage">
+        <header>
+            <div class="header-left">
+                <h2>🕒 Memory Lane</h2>
+            </div>
+            <div class="user-info">
+                <span>Welcome, <strong id="currentUserName"></strong></span>
+                <div class="avatar" id="userAvatar"></div>
+                <button id="logoutBtn" class="btn-secondary">Logout</button>
+            </div>
+        </header>
+
+        <div class="container">
+            <div class="app-layout">
+                <!-- Sidebar -->
+                <aside class="sidebar">
+                    <h3>Your Friends</h3>
+                    <div class="friends-list" id="friendsList">
+                        <!-- Friends will be listed here -->
+                    </div>
+                </aside>
+
+                <!-- Main Content -->
+                <main>
+                    <!-- Upload Section -->
+                    <section class="upload-section">
+                        <h3>Share a Memory</h3>
+                        <form class="upload-form" id="uploadForm">
+                            <div class="input-group">
+                                <input type="file" id="imageInput" accept="image/*" required>
+                                <img id="imagePreview" class="image-preview" alt="Image preview">
+                            </div>
+                            
+                            <div class="input-group">
+                                <textarea id="captionInput" placeholder="What's the story behind this memory?" rows="3" maxlength="300" required></textarea>
+                                <div class="char-counter"><span id="charCount">0</span>/300</div>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label for="memoryDate">When was this memory?</label>
+                                <input type="date" id="memoryDate" required>
+                            </div>
+                            
+                            <button type="submit">Post to Memory Lane</button>
+                        </form>
+                    </section>
+
+                    <!-- Feed -->
+                    <section class="feed" id="memoryFeed">
+                        <div class="empty-state" id="emptyState">
+                            <h3>No memories yet</h3>
+                            <p>Be the first to share a memory with your friends!</p>
+                        </div>
+                    </section>
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // User database
+        const users = [
+            { name: "Ritika", birthday: "06-07-08" },
+            { name: "Vidhi", birthday: "12-11-08" },
+            { name: "Saksham", birthday: "24-01-09" },
+            { name: "Harshit", birthday: "23-01-07" },
+            { name: "Sai", birthday: "04-03-08" },
+            { name: "Juili", birthday: "25-05-08" },
+            { name: "Kunal", birthday: "19-10-08" },
+            { name: "Ayaan", birthday: "16-01-08" },
+            { name: "Amrut", birthday: "20-09-05" },
+            { name: "Shifa", birthday: "10-06-08" }
+        ];
+
+        // DOM Elements
+        const loginPage = document.getElementById('loginPage');
+        const appPage = document.getElementById('appPage');
+        const loginForm = document.getElementById('loginForm');
+        const errorMessage = document.getElementById('errorMessage');
+        const currentUserName = document.getElementById('currentUserName');
+        const userAvatar = document.getElementById('userAvatar');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const friendsList = document.getElementById('friendsList');
+        const uploadForm = document.getElementById('uploadForm');
+        const imageInput = document.getElementById('imageInput');
+        const imagePreview = document.getElementById('imagePreview');
+        const captionInput = document.getElementById('captionInput');
+        const charCount = document.getElementById('charCount');
+        const memoryDate = document.getElementById('memoryDate');
+        const memoryFeed = document.getElementById('memoryFeed');
+        const emptyState = document.getElementById('emptyState');
+
+        // Current user
+        let currentUser = null;
+        let memories = [];
+
+        // Initialize the app
+        function init() {
+            // Check if user is already logged in
+            const savedUser = localStorage.getItem('memoryLaneUser');
+            if (savedUser) {
+                currentUser = JSON.parse(savedUser);
+                showApp();
+            } else {
+                showLogin();
+            }
+
+            // Load memories from localStorage
+            const savedMemories = localStorage.getItem('memoryLaneMemories');
+            if (savedMemories) {
+                memories = JSON.parse(savedMemories);
+                renderMemories();
+            }
+
+            // Set up event listeners
+            setupEventListeners();
+        }
+
+        // Set up all event listeners
+        function setupEventListeners() {
+            // Login form
+            loginForm.addEventListener('submit', handleLogin);
+            
+            // Logout button
+            logoutBtn.addEventListener('click', handleLogout);
+            
+            // Image preview
+            imageInput.addEventListener('change', handleImagePreview);
+            
+            // Character counter
+            captionInput.addEventListener('input', updateCharCount);
+            
+            // Upload form
+            uploadForm.addEventListener('submit', handleMemoryUpload);
+            
+            // Set today's date as default
+            memoryDate.valueAsDate = new Date();
+        }
+
+        // Handle login
+        function handleLogin(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            
+            // Find user
+            const user = users.find(u => 
+                u.name.toLowerCase() === username.toLowerCase() && 
+                u.birthday === password
+            );
+            
+            if (user) {
+                // Login successful
+                currentUser = user;
+                localStorage.setItem('memoryLaneUser', JSON.stringify(user));
+                showApp();
+            } else {
+                // Login failed
+                errorMessage.textContent = 'Invalid name or birthday. Please try again.';
+                errorMessage.style.display = 'block';
+            }
+        }
+
+        // Handle logout
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('memoryLaneUser');
+                currentUser = null;
+                showLogin();
+            }
+        }
+
+        // Handle image preview
+        function handleImagePreview() {
+            if (imageInput.files && imageInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = 'block';
+                };
+                reader.readAsDataURL(imageInput.files[0]);
+            }
+        }
+
+        // Update character count
+        function updateCharCount() {
+            charCount.textContent = captionInput.value.length;
+        }
+
+        // Handle memory upload
+        function handleMemoryUpload(e) {
+            e.preventDefault();
+            
+            const imageFile = imageInput.files[0];
+            const caption = captionInput.value.trim();
+            const date = memoryDate.value;
+            
+            if (!imageFile) {
+                alert('Please select an image to upload.');
+                return;
+            }
+            
+            if (!caption) {
+                alert('Please add a caption for your memory.');
+                return;
+            }
+            
+            // Create memory object
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const memory = {
+                    id: Date.now(),
+                    image: e.target.result,
+                    caption: caption,
+                    date: date,
+                    author: currentUser.name,
+                    timestamp: new Date().toISOString()
+                };
+                
+                // Add to memories and save
+                memories.unshift(memory);
+                localStorage.setItem('memoryLaneMemories', JSON.stringify(memories));
+                
+                // Update UI
+                renderMemories();
+                
+                // Reset form
+                uploadForm.reset();
+                imagePreview.style.display = 'none';
+                charCount.textContent = '0';
+                memoryDate.valueAsDate = new Date();
+            };
+            reader.readAsDataURL(imageFile);
+        }
+
+        // Render memories in the feed
+        function renderMemories() {
+            if (memories.length === 0) {
+                emptyState.style.display = 'block';
+                memoryFeed.innerHTML = '';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            
+            memoryFeed.innerHTML = memories.map(memory => `
+                <div class="memory-card">
+                    <img src="${memory.image}" alt="Memory image" class="memory-image">
+                    <div class="memory-content">
+                        <p class="memory-caption">${memory.caption}</p>
+                        <div class="memory-meta">
+                            <div class="memory-author">
+                                <div class="friend-avatar">${memory.author.charAt(0)}</div>
+                                ${memory.author}
+                            </div>
+                            <span>${formatDate(memory.date)}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Render friends list
+        function renderFriends() {
+            friendsList.innerHTML = users.map(user => `
+                <div class="friend-item">
+                    <div class="friend-avatar">${user.name.charAt(0)}</div>
+                    <span>${user.name}</span>
+                </div>
+            `).join('');
+        }
+
+        // Format date for display
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString(undefined, options);
+        }
+
+        // Show login page
+        function showLogin() {
+            loginPage.style.display = 'flex';
+            appPage.style.display = 'none';
+            loginForm.reset();
+            errorMessage.style.display = 'none';
+        }
+
+        // Show app page
+        function showApp() {
+            loginPage.style.display = 'none';
+            appPage.style.display = 'block';
+            
+            // Update user info
+            currentUserName.textContent = currentUser.name;
+            userAvatar.textContent = currentUser.name.charAt(0);
+            
+            // Render friends and memories
+            renderFriends();
+            renderMemories();
+        }
+
+        // Initialize the app when the page loads
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
