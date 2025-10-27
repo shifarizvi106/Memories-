@@ -205,36 +205,31 @@ header {
 /* Posts Grid - Polaroid Style */
 .scrapbook-posts {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 25px;
   margin-top: 30px;
 }
 
 .post-polaroid {
   background: rgba(30, 41, 59, 0.8);
-  padding: 20px 20px 30px;
-  border-radius: 8px;
+  padding: 20px;
+  border-radius: 12px;
   box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
   border: 1px solid rgba(139, 92, 246, 0.3);
   transition: all 0.3s ease;
-  position: relative;
-  transform: rotate(-1deg);
   backdrop-filter: blur(10px);
 }
-.post-polaroid:nth-child(even) {
-  transform: rotate(1deg);
-}
 .post-polaroid:hover {
-  transform: rotate(0deg) scale(1.05);
+  transform: translateY(-5px);
   box-shadow: 0 10px 35px rgba(139, 92, 246, 0.4);
   border-color: var(--accent);
 }
 
 .polaroid-image {
   width: 100%;
-  height: 200px;
+  height: 250px;
   object-fit: cover;
-  border-radius: 4px;
+  border-radius: 8px;
   margin-bottom: 15px;
   border: 2px solid rgba(139, 92, 246, 0.2);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
@@ -242,16 +237,135 @@ header {
 .polaroid-caption {
   font-size: 14px;
   color: var(--text);
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   padding: 0 5px;
+  line-height: 1.5;
 }
+
+/* Tags */
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+.tag {
+  background: rgba(139, 92, 246, 0.2);
+  color: var(--accent);
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+/* Reactions */
+.reactions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.heart-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  transition: all 0.3s ease;
+  padding: 5px;
+}
+.heart-btn:hover {
+  transform: scale(1.2);
+}
+.heart-btn.liked {
+  color: #ef4444;
+}
+.heart-count {
+  font-size: 14px;
+  color: var(--muted);
+  margin-left: -8px;
+}
+
+.comment-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--muted);
+  transition: all 0.3s ease;
+  padding: 5px 10px;
+  border-radius: 8px;
+}
+.comment-btn:hover {
+  background: rgba(139, 92, 246, 0.1);
+  color: var(--accent);
+}
+
+/* Comments Section */
+.comments-section {
+  margin-top: 12px;
+  border-top: 1px solid rgba(139, 92, 246, 0.2);
+  padding-top: 12px;
+}
+
+.comment {
+  background: rgba(30, 41, 59, 0.6);
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  border: 1px solid rgba(139, 92, 246, 0.1);
+}
+.comment-author {
+  font-weight: 600;
+  color: var(--accent);
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+.comment-text {
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.4;
+}
+
+.comment-input {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+.comment-input input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: 20px;
+  background: rgba(30, 41, 59, 0.6);
+  color: var(--text);
+  font-size: 13px;
+}
+.comment-input input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.comment-input button {
+  padding: 8px 15px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* Post Meta */
 .polaroid-meta {
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-size: 12px;
   color: var(--muted);
-  border-top: 1px solid rgba(139, 92, 246, 0.2);
   padding-top: 10px;
 }
 
@@ -414,6 +528,31 @@ header {
   text-align: center;
 }
 
+/* Tagging Modal */
+.tag-friends {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 15px 0;
+}
+.tag-friend-option {
+  background: rgba(30, 41, 59, 0.6);
+  padding: 8px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  transition: all 0.3s ease;
+  font-size: 13px;
+}
+.tag-friend-option.selected {
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+}
+.tag-friend-option:hover {
+  border-color: var(--accent);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .scrapbook-layout {
@@ -429,6 +568,9 @@ header {
   }
   .profile-scrap-meta {
     justify-content: center;
+  }
+  .scrapbook-posts {
+    grid-template-columns: 1fr;
   }
 }
 
@@ -503,8 +645,8 @@ header {
 
         <!-- Action Buttons (only show when viewing own profile) -->
         <div class="scrap-actions" id="actionButtons" style="display:none">
-          <button class="action-btn primary" id="newMemoryBtn">+ Add Single Memory</button>
-          <button class="action-btn primary multiple-upload-btn" id="multiMemoryBtn">+ Add Multiple Memories</button>
+          <button class="action-btn primary" id="newMemoryBtn">+ Add Memory</button>
+          <button class="action-btn primary multiple-upload-btn" id="multiMemoryBtn">+ Add Multiple</button>
           <button class="action-btn" id="editProfileBtn">Edit Profile</button>
           <button class="action-btn" id="logoutBtn" style="margin-left:auto">Logout</button>
         </div>
@@ -523,19 +665,19 @@ header {
 </div>
 
 <script>
-// Our friend group data - NOW WITH PALAK!
+// Our friend group data - BLANK BIOS for everyone to customize!
 const FRIENDS = [
-  { name: "Ritika", birthday: "06-07-08", bio: "sab" },
-  { name: "Vidhi", birthday: "12-11-08", bio: "apna" },
-  { name: "Saksham", birthday: "24-01-09", bio: "bio" },
-  { name: "Harshit", birthday: "23-01-07", bio: "khudh" },
-  { name: "Sai", birthday: "04-03-08", bio: "se" },
-  { name: "Juili", birthday: "25-05-08", bio: "daal lo" },
-  { name: "Kunal", birthday: "19-10-08", bio: "pfp" },
-  { name: "Ayaan", birthday: "16-01-08", bio: "and all" },
-  { name: "Amrut", birthday: "20-09-05", bio: "bhi" },
-  { name: "Shifa", birthday: "10-06-08", bio: "PThe Best" },
-  { name: "Palak", birthday: "06-11-08", bio: "Ligma" }
+  { name: "Ritika", birthday: "06-07-08", bio: "" },
+  { name: "Vidhi", birthday: "12-11-08", bio: "" },
+  { name: "Saksham", birthday: "24-01-09", bio: "" },
+  { name: "Harshit", birthday: "23-01-07", bio: "" },
+  { name: "Sai", birthday: "04-03-08", bio: "" },
+  { name: "Juili", birthday: "25-05-08", bio: "" },
+  { name: "Kunal", birthday: "19-10-08", bio: "" },
+  { name: "Ayaan", birthday: "16-01-08", bio: "" },
+  { name: "Amrut", birthday: "20-09-05", bio: "" },
+  { name: "Shifa", birthday: "10-06-08", bio: "" },
+  { name: "Palak", birthday: "06-11-08", bio: "" }
 ];
 
 // App state
@@ -561,6 +703,8 @@ const authArea = document.getElementById('authArea');
 function getPostsKey(username) { return `ml_posts_${username.toLowerCase()}`; }
 function getAvatarKey(username) { return `ml_avatar_${username.toLowerCase()}`; }
 function getProfileKey(username) { return `ml_profile_${username.toLowerCase()}`; }
+function getLikesKey(username) { return `ml_likes_${username.toLowerCase()}`; }
+function getCommentsKey(username) { return `ml_comments_${username.toLowerCase()}`; }
 
 function loadPosts(username) {
   try { return JSON.parse(localStorage.getItem(getPostsKey(username))) || []; } 
@@ -582,14 +726,32 @@ function saveAvatar(username, dataURL) {
 function loadProfile(username) {
   try { 
     const profile = localStorage.getItem(getProfileKey(username));
-    return profile ? JSON.parse(profile) : { bio: FRIENDS.find(f => f.name === username)?.bio || '' };
+    return profile ? JSON.parse(profile) : { bio: "" };
   } catch { 
-    return { bio: FRIENDS.find(f => f.name === username)?.bio || '' };
+    return { bio: "" };
   }
 }
 
 function saveProfile(username, profileData) {
   localStorage.setItem(getProfileKey(username), JSON.stringify(profileData));
+}
+
+function loadLikes(username) {
+  try { return JSON.parse(localStorage.getItem(getLikesKey(username))) || {}; } 
+  catch { return {}; }
+}
+
+function saveLikes(username, likes) {
+  localStorage.setItem(getLikesKey(username), JSON.stringify(likes));
+}
+
+function loadComments(username) {
+  try { return JSON.parse(localStorage.getItem(getCommentsKey(username))) || {}; } 
+  catch { return {}; }
+}
+
+function saveComments(username, comments) {
+  localStorage.setItem(getCommentsKey(username), JSON.stringify(comments));
 }
 
 // Login function
@@ -654,7 +816,7 @@ function renderFriendsList() {
     }
 
     const savedProfile = loadProfile(friend.name);
-    const displayBio = savedProfile.bio || friend.bio;
+    const displayBio = savedProfile.bio || "Click to add a bio! ✨";
 
     const info = document.createElement('div');
     info.innerHTML = `
@@ -692,7 +854,7 @@ function renderUpcomingBirthdays() {
   });
 }
 
-// Render profile - FIXED: Now properly uses saved profiles
+// Render profile
 function renderProfile(username) {
   const friend = FRIENDS.find(f => f.name === username);
   if (!friend) return;
@@ -702,7 +864,7 @@ function renderProfile(username) {
 
   // Update profile header
   profileName.textContent = friend.name;
-  profileBio.textContent = savedProfile.bio || friend.bio;
+  profileBio.textContent = savedProfile.bio || "This user hasn't added a bio yet...";
   profileBday.textContent = formatBirthday(friend.birthday);
 
   // Update avatar
@@ -730,9 +892,12 @@ function formatBirthday(bday) {
   return `${parseInt(d)} ${months[parseInt(m) - 1]} 20${y}`;
 }
 
-// Render posts
+// Render posts with social features
 function renderPosts(username) {
   const posts = loadPosts(username);
+  const likes = loadLikes(username);
+  const comments = loadComments(username);
+  
   postsGrid.innerHTML = '';
   
   postCount.textContent = posts.length;
@@ -745,11 +910,46 @@ function renderPosts(username) {
   noPostsNotice.style.display = 'none';
   
   posts.forEach(post => {
+    const postLikes = likes[post.id] || [];
+    const postComments = comments[post.id] || [];
+    const isLiked = postLikes.includes(currentUser.name);
+    
     const postEl = document.createElement('div');
     postEl.className = 'post-polaroid';
     postEl.innerHTML = `
       <img src="${post.image}" class="polaroid-image" alt="Memory">
       <div class="polaroid-caption">${post.caption || 'A beautiful memory 💫'}</div>
+      
+      ${post.tags && post.tags.length > 0 ? `
+        <div class="tags-container">
+          ${post.tags.map(tag => `<span class="tag">@${tag}</span>`).join('')}
+        </div>
+      ` : ''}
+      
+      <div class="reactions">
+        <button class="heart-btn ${isLiked ? 'liked' : ''}" onclick="toggleLike('${username}', '${post.id}')">
+          ${isLiked ? '❤️' : '🤍'}
+        </button>
+        <span class="heart-count">${postLikes.length}</span>
+        
+        <button class="comment-btn" onclick="toggleComments('${username}', '${post.id}')">
+          💬 ${postComments.length}
+        </button>
+      </div>
+      
+      <div class="comments-section" id="comments-${username}-${post.id}" style="display:none">
+        ${postComments.map(comment => `
+          <div class="comment">
+            <div class="comment-author">${comment.author}:</div>
+            <div class="comment-text">${comment.text}</div>
+          </div>
+        `).join('')}
+        <div class="comment-input">
+          <input type="text" id="comment-input-${username}-${post.id}" placeholder="Add a comment...">
+          <button onclick="addComment('${username}', '${post.id}')">Post</button>
+        </div>
+      </div>
+      
       <div class="polaroid-meta">
         <span>${new Date(post.createdAt).toLocaleDateString()}</span>
         ${username === currentUser.name ? '<button onclick="deletePost(\'' + post.id + '\')" style="background:none;border:none;cursor:pointer;color:var(--muted)">🗑️</button>' : ''}
@@ -759,7 +959,50 @@ function renderPosts(username) {
   });
 }
 
-// Add single memory
+// Toggle like on a post
+function toggleLike(username, postId) {
+  const likes = loadLikes(username);
+  if (!likes[postId]) likes[postId] = [];
+  
+  const userIndex = likes[postId].indexOf(currentUser.name);
+  if (userIndex > -1) {
+    likes[postId].splice(userIndex, 1);
+  } else {
+    likes[postId].push(currentUser.name);
+  }
+  
+  saveLikes(username, likes);
+  renderPosts(viewingProfile);
+}
+
+// Toggle comments section
+function toggleComments(username, postId) {
+  const commentsSection = document.getElementById(`comments-${username}-${postId}`);
+  commentsSection.style.display = commentsSection.style.display === 'none' ? 'block' : 'none';
+}
+
+// Add comment to a post
+function addComment(username, postId) {
+  const commentInput = document.getElementById(`comment-input-${username}-${postId}`);
+  const commentText = commentInput.value.trim();
+  
+  if (!commentText) return;
+  
+  const comments = loadComments(username);
+  if (!comments[postId]) comments[postId] = [];
+  
+  comments[postId].push({
+    author: currentUser.name,
+    text: commentText,
+    timestamp: Date.now()
+  });
+  
+  saveComments(username, comments);
+  commentInput.value = '';
+  renderPosts(viewingProfile);
+}
+
+// Add single memory with tagging
 document.getElementById('newMemoryBtn').onclick = function() {
   const input = document.createElement('input');
   input.type = 'file';
@@ -770,25 +1013,65 @@ document.getElementById('newMemoryBtn').onclick = function() {
     
     const reader = new FileReader();
     reader.onload = function(e) {
-      const caption = prompt('Add a caption for this memory:') || 'A special moment 💫';
-      const posts = loadPosts(currentUser.name);
-      const newPost = {
-        id: Date.now().toString(),
-        image: e.target.result,
-        caption: caption,
-        createdAt: Date.now()
-      };
+      // Show tagging modal
+      const modal = document.createElement('div');
+      modal.className = 'modal-backdrop';
+      modal.innerHTML = `
+        <div class="modal-content">
+          <h3 class="modal-title">Add Memory</h3>
+          <div class="form-row">
+            <input type="text" id="postCaption" class="scrap-input" placeholder="Add a caption...">
+          </div>
+          <div>
+            <label style="color:var(--muted);font-size:14px;margin-bottom:8px;display:block">Tag Friends:</label>
+            <div class="tag-friends" id="tagFriends">
+              ${FRIENDS.filter(f => f.name !== currentUser.name).map(friend => `
+                <div class="tag-friend-option" data-name="${friend.name}">${friend.name}</div>
+              `).join('')}
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;justify-content:center;margin-top:20px">
+            <button class="action-btn" onclick="this.closest('.modal-backdrop').remove()">Cancel</button>
+            <button class="action-btn primary" onclick="saveNewPost('${e.target.result}')">Post</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
       
-      posts.unshift(newPost);
-      savePosts(currentUser.name, posts);
-      renderPosts(currentUser.name);
+      // Add click handlers for tag selection
+      modal.querySelectorAll('.tag-friend-option').forEach(option => {
+        option.onclick = function() {
+          this.classList.toggle('selected');
+        };
+      });
     };
     reader.readAsDataURL(file);
   };
   input.click();
 };
 
-// NEW: Add multiple memories at once
+// Save new post with tags
+function saveNewPost(imageData) {
+  const modal = document.querySelector('.modal-backdrop');
+  const caption = document.getElementById('postCaption').value.trim() || 'A special moment 💫';
+  const selectedTags = Array.from(modal.querySelectorAll('.tag-friend-option.selected')).map(el => el.dataset.name);
+  
+  const posts = loadPosts(currentUser.name);
+  const newPost = {
+    id: Date.now().toString(),
+    image: imageData,
+    caption: caption,
+    tags: selectedTags,
+    createdAt: Date.now()
+  };
+  
+  posts.unshift(newPost);
+  savePosts(currentUser.name, posts);
+  modal.remove();
+  renderPosts(currentUser.name);
+}
+
+// Add multiple memories
 document.getElementById('multiMemoryBtn').onclick = function() {
   const input = document.createElement('input');
   input.type = 'file';
@@ -798,7 +1081,6 @@ document.getElementById('multiMemoryBtn').onclick = function() {
     const files = Array.from(e.target.files);
     if (files.length === 0) return;
 
-    // Create modal for progress
     const modal = document.createElement('div');
     modal.className = 'modal-backdrop';
     modal.innerHTML = `
@@ -877,19 +1159,16 @@ function deletePost(postId) {
   renderPosts(currentUser.name);
 }
 
-// Edit profile - FIXED: Now works properly
+// Edit profile
 document.getElementById('editProfileBtn').onclick = function() {
   const savedProfile = loadProfile(currentUser.name);
-  const currentBio = savedProfile.bio || FRIENDS.find(f => f.name === currentUser.name)?.bio || '';
+  const currentBio = savedProfile.bio || "";
   
   const newBio = prompt('Update your bio:', currentBio);
   
   if (newBio !== null) {
-    // Save the new bio
     saveProfile(currentUser.name, { bio: newBio });
-    // Update the display
-    profileBio.textContent = newBio;
-    // Update friends list
+    profileBio.textContent = newBio || "This user hasn't added a bio yet...";
     renderFriendsList();
   }
   
