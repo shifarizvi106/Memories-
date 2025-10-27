@@ -360,6 +360,60 @@ header {
   border-color: var(--accent);
 }
 
+/* Multiple Upload Styles */
+.multiple-upload-btn {
+  background: linear-gradient(135deg, #10b981, #059669) !important;
+}
+.multiple-upload-btn:hover {
+  background: linear-gradient(135deg, #059669, #10b981) !important;
+}
+
+.upload-progress {
+  margin: 10px 0;
+  padding: 10px;
+  background: rgba(139, 92, 246, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+}
+.progress-text {
+  font-size: 14px;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* Modal Styles */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+}
+
+.modal-content {
+  background: var(--card);
+  padding: 30px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.modal-title {
+  color: var(--accent);
+  margin-bottom: 20px;
+  text-align: center;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .scrapbook-layout {
@@ -449,8 +503,9 @@ header {
 
         <!-- Action Buttons (only show when viewing own profile) -->
         <div class="scrap-actions" id="actionButtons" style="display:none">
-          <button class="action-btn primary" id="newMemoryBtn">+ Add Memory</button>
-          <button class="action-btn" id="editProfileBtn">Edit Scrapbook</button>
+          <button class="action-btn primary" id="newMemoryBtn">+ Add Single Memory</button>
+          <button class="action-btn primary multiple-upload-btn" id="multiMemoryBtn">+ Add Multiple Memories</button>
+          <button class="action-btn" id="editProfileBtn">Edit Profile</button>
           <button class="action-btn" id="logoutBtn" style="margin-left:auto">Logout</button>
         </div>
 
@@ -470,17 +525,17 @@ header {
 <script>
 // Our friend group data - NOW WITH PALAK!
 const FRIENDS = [
-  { name: "Ritika", birthday: "06-07-08", bio: "Sab" },
-  { name: "Vidhi", birthday: "12-11-08", bio: "Apna" },
-  { name: "Saksham", birthday: "24-01-09", bio: "Bio" },
-  { name: "Harshit", birthday: "23-01-07", bio: "Khud" },
-  { name: "Sai", birthday: "04-03-08", bio: "Edit" },
-  { name: "Juili", birthday: "25-05-08", bio: "Karlo" },
+  { name: "Ritika", birthday: "06-07-08", bio: "sab" },
+  { name: "Vidhi", birthday: "12-11-08", bio: "apna" },
+  { name: "Saksham", birthday: "24-01-09", bio: "bio" },
+  { name: "Harshit", birthday: "23-01-07", bio: "khudh" },
+  { name: "Sai", birthday: "04-03-08", bio: "se" },
+  { name: "Juili", birthday: "25-05-08", bio: "daal lo" },
   { name: "Kunal", birthday: "19-10-08", bio: "pfp" },
-  { name: "Ayaan", birthday: "16-01-08", bio: "bhi" },
-  { name: "Amrut", birthday: "20-09-05", bio: "daal lena" },
-  { name: "Shifa", birthday: "10-06-08", bio: "Best" },
-  { name: "Palak", birthday: "06-11-08", bio: "okie" }
+  { name: "Ayaan", birthday: "16-01-08", bio: "and all" },
+  { name: "Amrut", birthday: "20-09-05", bio: "bhi" },
+  { name: "Shifa", birthday: "10-06-08", bio: "PThe Best" },
+  { name: "Palak", birthday: "06-11-08", bio: "Ligma" }
 ];
 
 // App state
@@ -502,7 +557,7 @@ const noPostsNotice = document.getElementById('noPostsNotice');
 const actionButtons = document.getElementById('actionButtons');
 const authArea = document.getElementById('authArea');
 
-// Storage helpers - FIXED: Now properly saves profiles
+// Storage helpers
 function getPostsKey(username) { return `ml_posts_${username.toLowerCase()}`; }
 function getAvatarKey(username) { return `ml_avatar_${username.toLowerCase()}`; }
 function getProfileKey(username) { return `ml_profile_${username.toLowerCase()}`; }
@@ -524,13 +579,12 @@ function saveAvatar(username, dataURL) {
   localStorage.setItem(getAvatarKey(username), dataURL);
 }
 
-// NEW: Profile loading and saving functions
 function loadProfile(username) {
   try { 
     const profile = localStorage.getItem(getProfileKey(username));
-    return profile ? JSON.parse(profile) : null;
+    return profile ? JSON.parse(profile) : { bio: FRIENDS.find(f => f.name === username)?.bio || '' };
   } catch { 
-    return null; 
+    return { bio: FRIENDS.find(f => f.name === username)?.bio || '' };
   }
 }
 
@@ -585,7 +639,7 @@ function renderFriendsList() {
     friendEl.onclick = () => {
       viewingProfile = friend.name;
       renderProfile(friend.name);
-      renderFriendsList(); // Re-render to update active states
+      renderFriendsList();
     };
 
     const avatar = document.createElement('div');
@@ -599,10 +653,13 @@ function renderFriendsList() {
       avatar.textContent = friend.name[0];
     }
 
+    const savedProfile = loadProfile(friend.name);
+    const displayBio = savedProfile.bio || friend.bio;
+
     const info = document.createElement('div');
     info.innerHTML = `
       <div style="font-weight:700">${friend.name} ${isCurrentUser ? ' (You)' : ''}</div>
-      <div style="font-size:12px;color:${isActive ? 'white' : 'var(--muted)'}">${friend.bio}</div>
+      <div style="font-size:12px;color:${isActive ? 'white' : 'var(--muted)'}">${displayBio}</div>
     `;
 
     friendEl.appendChild(avatar);
@@ -635,25 +692,28 @@ function renderUpcomingBirthdays() {
   });
 }
 
-// Render profile - FIXED: Now uses saved profiles
+// Render profile - FIXED: Now properly uses saved profiles
 function renderProfile(username) {
   const friend = FRIENDS.find(f => f.name === username);
   if (!friend) return;
 
-  // Load saved profile data or use default
   const savedProfile = loadProfile(username);
-  const displayBio = savedProfile?.bio || friend.bio;
-  const displayAvatar = loadAvatar(username);
+  const savedAvatar = loadAvatar(username);
 
   // Update profile header
   profileName.textContent = friend.name;
-  profileBio.textContent = displayBio;
+  profileBio.textContent = savedProfile.bio || friend.bio;
   profileBday.textContent = formatBirthday(friend.birthday);
 
   // Update avatar
-  profileAvatar.style.backgroundImage = displayAvatar ? `url(${displayAvatar})` : '';
-  profileAvatar.style.backgroundSize = displayAvatar ? 'cover' : '';
-  profileAvatar.textContent = displayAvatar ? '' : friend.name[0];
+  if (savedAvatar) {
+    profileAvatar.style.backgroundImage = `url(${savedAvatar})`;
+    profileAvatar.style.backgroundSize = 'cover';
+    profileAvatar.textContent = '';
+  } else {
+    profileAvatar.style.backgroundImage = '';
+    profileAvatar.textContent = friend.name[0];
+  }
 
   // Show/hide action buttons
   const isOwnProfile = friend.name === currentUser.name;
@@ -699,7 +759,7 @@ function renderPosts(username) {
   });
 }
 
-// Add new memory
+// Add single memory
 document.getElementById('newMemoryBtn').onclick = function() {
   const input = document.createElement('input');
   input.type = 'file';
@@ -728,6 +788,86 @@ document.getElementById('newMemoryBtn').onclick = function() {
   input.click();
 };
 
+// NEW: Add multiple memories at once
+document.getElementById('multiMemoryBtn').onclick = function() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'image/*';
+  input.multiple = true;
+  input.onchange = async function(e) {
+    const files = Array.from(e.target.files);
+    if (files.length === 0) return;
+
+    // Create modal for progress
+    const modal = document.createElement('div');
+    modal.className = 'modal-backdrop';
+    modal.innerHTML = `
+      <div class="modal-content">
+        <h3 class="modal-title">Uploading ${files.length} Memories...</h3>
+        <div class="upload-progress">
+          <div class="progress-text" id="progressText">Preparing upload...</div>
+        </div>
+        <div style="display:flex;gap:10px;justify-content:center;margin-top:20px">
+          <button class="action-btn" id="cancelUpload">Cancel</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+
+    let uploadCancelled = false;
+    modal.querySelector('#cancelUpload').onclick = () => {
+      uploadCancelled = true;
+      modal.remove();
+    };
+
+    const posts = loadPosts(currentUser.name);
+    let uploadedCount = 0;
+
+    for (const file of files) {
+      if (uploadCancelled) break;
+
+      const progressText = modal.querySelector('#progressText');
+      progressText.textContent = `Uploading ${uploadedCount + 1} of ${files.length}: ${file.name}`;
+
+      try {
+        const imageData = await readFileAsDataURL(file);
+        const caption = `Memory ${uploadedCount + 1} from batch upload 📸`;
+        
+        const newPost = {
+          id: Date.now().toString() + uploadedCount,
+          image: imageData,
+          caption: caption,
+          createdAt: Date.now()
+        };
+        
+        posts.unshift(newPost);
+        uploadedCount++;
+        
+      } catch (error) {
+        console.error('Error uploading file:', file.name, error);
+      }
+    }
+
+    if (!uploadCancelled) {
+      savePosts(currentUser.name, posts);
+      renderPosts(currentUser.name);
+      modal.querySelector('#progressText').textContent = `Successfully uploaded ${uploadedCount} memories! 🎉`;
+      setTimeout(() => modal.remove(), 2000);
+    }
+  };
+  input.click();
+};
+
+// Helper function for file reading
+function readFileAsDataURL(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = e => resolve(e.target.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
 // Delete post
 function deletePost(postId) {
   if (!confirm('Remove this memory from your scrapbook?')) return;
@@ -737,18 +877,19 @@ function deletePost(postId) {
   renderPosts(currentUser.name);
 }
 
-// Edit profile - FIXED: Now properly saves changes
+// Edit profile - FIXED: Now works properly
 document.getElementById('editProfileBtn').onclick = function() {
-  const currentBio = profileBio.textContent;
+  const savedProfile = loadProfile(currentUser.name);
+  const currentBio = savedProfile.bio || FRIENDS.find(f => f.name === currentUser.name)?.bio || '';
+  
   const newBio = prompt('Update your bio:', currentBio);
   
-  if (newBio !== null && newBio !== currentBio) {
-    // Save the new bio to profile storage
+  if (newBio !== null) {
+    // Save the new bio
     saveProfile(currentUser.name, { bio: newBio });
-    // Update the display immediately
+    // Update the display
     profileBio.textContent = newBio;
-    
-    // Also update the friends list display
+    // Update friends list
     renderFriendsList();
   }
   
